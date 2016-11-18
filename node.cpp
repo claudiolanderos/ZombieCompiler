@@ -32,3 +32,78 @@ void NRotate::CodeGen(CodeContext& context) const
 		context.mOps.push_back("rotate,1");
 	}
 }
+
+NForward::NForward()
+{
+}
+
+void NForward::CodeGen(CodeContext &context) const
+{
+    
+}
+
+NAttack::NAttack()
+{
+}
+
+void NAttack::CodeGen(CodeContext &context) const
+{
+    
+}
+
+NRangedAttack::NRangedAttack()
+{
+}
+
+void NRangedAttack::CodeGen(CodeContext &context) const
+{
+    
+}
+
+NIfElse::NIfElse(NBoolean* val, NBlock* ifBlock, NBlock* elseBlock)
+    : mValue(val), mIf(ifBlock), mElse(elseBlock)
+{
+}
+
+void NIfElse::CodeGen(CodeContext &context) const
+{
+    
+}
+
+NIsHuman::NIsHuman(NNumeric* val)
+    : mVal(val)
+{
+}
+
+void NIsHuman::CodeGen(CodeContext &context) const
+{
+    
+}
+
+NIsZombie::NIsZombie(NNumeric* val)
+    : mVal(val)
+{
+}
+
+void NIsZombie::CodeGen(CodeContext &context) const
+{
+    
+}
+
+NIsPassable::NIsPassable()
+{
+}
+
+void NIsPassable::CodeGen(CodeContext &context) const
+{
+    
+}
+
+NIsRandom::NIsRandom()
+{
+}
+
+void NIsRandom::CodeGen(CodeContext &context) const
+{
+    
+}

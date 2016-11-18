@@ -37,6 +37,27 @@ private:
 	NNumeric* mDir;
 };
 
+class NForward : public NStatement
+{
+public:
+    NForward();
+    virtual void CodeGen(CodeContext& context) const override;
+};
+
+class NAttack : public NStatement
+{
+public:
+    NAttack();
+    virtual void CodeGen(CodeContext& context) const override;
+};
+
+class NRangedAttack : public NStatement
+{
+public:
+    NRangedAttack();
+    virtual void CodeGen(CodeContext& context) const override;
+};
+
 class NBoolean : public Node
 {
 };
@@ -51,4 +72,47 @@ public:
 private:
 	std::list<NStatement*> mStatements;
 	bool mbMainBlock;
+};
+
+class NIfElse : public NStatement
+{
+public:
+    NIfElse(NBoolean* val, NBlock* ifBlock, NBlock* elseBlock);
+    virtual void CodeGen(CodeContext& context) const override;
+private:
+    NBoolean* mValue;
+    NBlock* mIf;
+    NBlock* mElse;
+};
+
+class NIsHuman : public NBoolean
+{
+public:
+    NIsHuman(NNumeric* val);
+    virtual void CodeGen(CodeContext& context) const override;
+private:
+    NNumeric* mVal;
+};
+
+class NIsZombie : public NBoolean
+{
+public:
+    NIsZombie(NNumeric* val);
+    virtual void CodeGen(CodeContext& context) const override;
+private:
+    NNumeric* mVal;
+};
+
+class NIsPassable : public NBoolean
+{
+public:
+    NIsPassable();
+    virtual void CodeGen(CodeContext& context) const override;
+};
+
+class NIsRandom : public NBoolean
+{
+public:
+    NIsRandom();
+    virtual void CodeGen(CodeContext& context) const override;
 };

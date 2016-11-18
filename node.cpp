@@ -8,7 +8,13 @@ void NBlock::AddStatement(NStatement* statement)
 
 void NBlock::CodeGen(CodeContext& context) const
 {
-	// TODO: Loop through statements in list and code gen them
+    for (auto& i : mStatements) {
+        i->CodeGen(context);
+    }
+    if(mbMainBlock)
+    {
+        context.mOps.push_back("goto,1");
+    }
 }
 
 NNumeric::NNumeric(std::string& value)
@@ -39,7 +45,7 @@ NForward::NForward()
 
 void NForward::CodeGen(CodeContext &context) const
 {
-    
+    context.mOps.push_back("forward");
 }
 
 NAttack::NAttack()
@@ -48,7 +54,7 @@ NAttack::NAttack()
 
 void NAttack::CodeGen(CodeContext &context) const
 {
-    
+    context.mOps.push_back("attack");
 }
 
 NRangedAttack::NRangedAttack()
@@ -57,7 +63,7 @@ NRangedAttack::NRangedAttack()
 
 void NRangedAttack::CodeGen(CodeContext &context) const
 {
-    
+    context.mOps.push_back("ranged_attack");
 }
 
 NIfElse::NIfElse(NBoolean* val, NBlock* ifBlock, NBlock* elseBlock)
@@ -67,7 +73,16 @@ NIfElse::NIfElse(NBoolean* val, NBlock* ifBlock, NBlock* elseBlock)
 
 void NIfElse::CodeGen(CodeContext &context) const
 {
-    
+    mValue->CodeGen(context);
+    int jeLocation = static_cast<int>(context.mOps.size());
+    std::string temp = "je to if block";
+    context.mOps.push_back(temp);
+    mElse->CodeGen(context);
+    int gotoLocation = static_cast<int>(context.mOps.size());
+    context.mOps.push_back("goto past the if block");
+    context.mOps.at(jeLocation) = "je," + std::to_string(context.mOps.size());
+    mIf->CodeGen(context);
+    context.mOps.at(gotoLocation) = "goto," + std::to_string(context.mOps.size());
 }
 
 NIsHuman::NIsHuman(NNumeric* val)
@@ -77,7 +92,14 @@ NIsHuman::NIsHuman(NNumeric* val)
 
 void NIsHuman::CodeGen(CodeContext &context) const
 {
-    
+    if (mVal->mvalue == 1)
+    {
+        context.mOps.push_back("test_human,1");
+    }
+    else if (mVal->mvalue == 2)
+    {
+        context.mOps.push_back("test_human,2");
+    }
 }
 
 NIsZombie::NIsZombie(NNumeric* val)
@@ -87,7 +109,14 @@ NIsZombie::NIsZombie(NNumeric* val)
 
 void NIsZombie::CodeGen(CodeContext &context) const
 {
-    
+    if (mVal->mvalue == 1)
+    {
+        context.mOps.push_back("test_zombie,1");
+    }
+    else if (mVal->mvalue == 2)
+    {
+        context.mOps.push_back("test_zombie,2");
+    }
 }
 
 NIsPassable::NIsPassable()
@@ -96,7 +125,7 @@ NIsPassable::NIsPassable()
 
 void NIsPassable::CodeGen(CodeContext &context) const
 {
-    
+    context.mOps.push_back("test_passable");
 }
 
 NIsRandom::NIsRandom()
@@ -105,5 +134,5 @@ NIsRandom::NIsRandom()
 
 void NIsRandom::CodeGen(CodeContext &context) const
 {
-    
+    context.mOps.push_back("test_random");
 }

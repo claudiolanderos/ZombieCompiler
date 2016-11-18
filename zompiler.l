@@ -31,13 +31,25 @@ int g_LineNumber = 1;
 "("						{ return TOKEN(TLPAREN); }
 ")"						{ return TOKEN(TRPAREN); }
 
+"if"                    { return TOKEN(TIF); }
+"else"                  { return TOKEN(TELSE); }
+
 "rotate"				{ return TOKEN(TROTATE); }
+"forward"               { return TOKEN(TFORWARD); }
+"is_human"              { return TOKEN(TISHUMAN); }
+"is_zombie"             { return TOKEN(TISZOMBIE); }
+"is_passable"           { return TOKEN(TISPASSABLE); }
+"is_random"             { return TOKEN(TISRANDOM); }
+"attack"                { return TOKEN(TATTACK); }
+"ranged_attack"         { return TOKEN(TRANGEDATTACK); }
 
 %{
 /* Do not add any of your own tokens below this line!!!! */
 %}
 
 "\n"					{ g_LineNumber++; }
+
+"//".+"\n"              { g_LineNumber++; }
 
 [a-zA-Z_]+				{ std::cout << "ERROR: Unknown token '" << yytext << "' on line " << g_LineNumber << std::endl; yyterminate(); }
 

@@ -28,11 +28,13 @@ NBlock* g_MainBlock = nullptr;
 /* Terminal symbols */
 %token <string> TINTEGER
 %token <token> TLBRACE TRBRACE TSEMI TLPAREN TRPAREN
-%token <token> TMAIN TROTATE
+%token <token> TMAIN TROTATE TFORWARD TISHUMAN TATTACK TISPASSABLE TISRANDOM TISZOMBIE TRANGEDATTACK
+%token <token> TIF TELSE
 
 /* Statements */
 %type <block> main_loop block
-%type <statement> statement rotate
+%type <statement> statement rotate forward ifelse attack rangedattack
+%type <boolean> boolean ishuman ispassable israndom iszombie
  
 /* Expressions */
 %type <numeric> numeric
@@ -43,15 +45,50 @@ main_loop	: TMAIN TLBRACE block TRBRACE { std::cout << "Main entry point found!"
 ;
 
 block		: statement { std::cout << "Single statement" << std::endl; }
-/* TODO: Add support for multiple statements in a block */
+            | block statement { std::cout << "Multiple statements" << std::endl; }
+;
+
+boolean     : ishuman
+            | ispassable
+            | israndom
+            | iszombie
 ;
 
 statement	: rotate TSEMI
+            | forward TSEMI
+            | ifelse
+            | attack TSEMI
+            | rangedattack TSEMI
 ;
-			
+
+ifelse      : TIF TLPAREN boolean TRPAREN TLBRACE block TRBRACE TELSE TLBRACE block TRBRACE { std::cout << "If else statement" << std::endl; }
+;
+
 rotate		: TROTATE TLPAREN numeric TRPAREN { std::cout << "Rotate command" << std::endl; }
 ;
-			
+
+forward     : TFORWARD TLPAREN TRPAREN { std::cout << "Forward command" <<
+    std::endl; }
+;
+
+ishuman     : TISHUMAN TLPAREN numeric TRPAREN { std::cout << "Is human command" << std::endl; }
+;
+
+iszombie     : TISZOMBIE TLPAREN numeric TRPAREN { std::cout << "Is zombie command" << std::endl; }
+;
+
+ispassable  : TISPASSABLE TLPAREN TRPAREN { std::cout << "Is passable command" << std::endl; }
+;
+
+israndom    : TISRANDOM TLPAREN TRPAREN { std::cout << "Is random command" << std::endl; }
+;
+
+attack      : TATTACK TLPAREN TRPAREN { std::cout << "Attack command" << std::endl; }
+;
+
+rangedattack      : TRANGEDATTACK TLPAREN TRPAREN { std::cout << "Ranged attack command" << std::endl; }
+;
+
 numeric		: TINTEGER { std::cout << "Numeric value of " << *($1) << std::endl; }
 ;
 

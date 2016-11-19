@@ -8,6 +8,7 @@
 struct CodeContext
 {
 	std::vector<std::string> mOps;
+    std::map<int,int> mGotos;
 };
 
 class Node

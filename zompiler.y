@@ -43,7 +43,8 @@ NBlock* g_MainBlock = nullptr;
 
 main_loop	: TMAIN TLBRACE block TRBRACE { std::cout << "Main entry point found!" << std::endl;
     g_MainBlock = $3;
-    $3->SetMainBlock();}
+    $3->SetMainBlock();
+}
 ;
 
 block		: statement { std::cout << "Single statement" << std::endl;

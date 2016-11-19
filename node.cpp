@@ -1,5 +1,6 @@
 #include "node.h"
 #include <sstream>
+#include <iostream>
 
 void NBlock::AddStatement(NStatement* statement)
 {
@@ -14,6 +15,18 @@ void NBlock::CodeGen(CodeContext& context) const
     if(mbMainBlock)
     {
         context.mOps.push_back("goto,1");
+        context.mGotos.insert(std::make_pair(context.mOps.size(), 1));
+
+        for (auto iter = context.mGotos.begin(); iter != context.mGotos.end(); iter++) {
+            int lineNumber = iter->first;
+            int nextValue = iter->second;
+            auto next = context.mGotos.find(nextValue);
+            while (next != context.mGotos.end()) {
+                nextValue = next->second;
+                next = context.mGotos.find(nextValue);
+            }
+            context.mOps.at(lineNumber-1) = "goto," + std::to_string(nextValue);
+        }
     }
 }
 
@@ -83,6 +96,7 @@ void NIfElse::CodeGen(CodeContext &context) const
     context.mOps.at(jeLocation) = "je," + std::to_string(context.mOps.size()+1);
     mIf->CodeGen(context);
     context.mOps.at(gotoLocation) = "goto," + std::to_string(context.mOps.size()+1);
+    context.mGotos.insert(std::make_pair(gotoLocation+1, context.mOps.size()+1));
 }
 
 NIsHuman::NIsHuman(NNumeric* val)

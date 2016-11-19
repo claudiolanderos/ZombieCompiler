@@ -103,7 +103,8 @@ rangedattack      : TRANGEDATTACK TLPAREN TRPAREN { std::cout << "Ranged attack 
                     $$ = new NRangedAttack();}
 ;
 
-numeric		: TINTEGER { std::cout << "Numeric value of " << *($1) << std::endl; }
+numeric		: TINTEGER { std::cout << "Numeric value of " << *($1) << std::endl;
+                $$ = new NNumeric(*($1));}
 ;
 
 %%

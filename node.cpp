@@ -80,9 +80,9 @@ void NIfElse::CodeGen(CodeContext &context) const
     mElse->CodeGen(context);
     int gotoLocation = static_cast<int>(context.mOps.size());
     context.mOps.push_back("goto past the if block");
-    context.mOps.at(jeLocation) = "je," + std::to_string(context.mOps.size());
+    context.mOps.at(jeLocation) = "je," + std::to_string(context.mOps.size()+1);
     mIf->CodeGen(context);
-    context.mOps.at(gotoLocation) = "goto," + std::to_string(context.mOps.size());
+    context.mOps.at(gotoLocation) = "goto," + std::to_string(context.mOps.size()+1);
 }
 
 NIsHuman::NIsHuman(NNumeric* val)
